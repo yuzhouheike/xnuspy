@@ -56,8 +56,11 @@ struct nameidata {
 
 struct ptrace_args {
     int req;         // 4 bytes
-    void * unknow[4];        //和实际内存的中偏移不符.实际pid 是+8，所以加了unknow填充
-    pid_t pid;       // 4 bytes
+    void * unknow1[4];        //和实际内存的中偏移不符.实际pid 是+8，所以加了unknow填充
+    
+    pid_t pid;   
+    
+    // void * unknow2[];     // 4 bytes
     user_addr_t addr;// 8 bytes (on a 64-bit system)
     int data;        // 4 bytes
 };
@@ -90,38 +93,26 @@ static int my_ptrace(struct proc *p, struct ptrace_args *uap, int32_t *retval){
     kprintf("$$$$$$$$$$$$ %s: (CPU %d): '%s' (%d) ptrace_hook  to req : %d pid : %d  \n", __func__, cpu,
             caller_name, caller,uap->req,uap->pid);
 
-        kprintf("uap->req == 31 uap %d \n",(int )uap);
-        kprintf("uap->req == 31 uap->+4 %d \n",(int )(uap+4));
-        kprintf("uap->req == 31 uap->+8 %d \n",(int )(uap+8));
-        kprintf("uap->req == 31 uap->+12 %d \n",(int )(uap+12));
-        kprintf("uap->req == 31 uap->+16 %d \n",(int )(uap+16));
-        kprintf("uap->req == 31 uap->+20 %d \n",(int )(uap+20));
-        kprintf("uap->req == 31 uap->+24 %d \n",(int )(uap+24));
-        kprintf("uap->req == 31 uap->+28 %d \n",(int )(uap+28));
-        
-        kprintf("uap->req == 31 uap->req %d \n",uap->req);
-        kprintf("uap->req == 31 uap->pid %d \n",uap->pid);
-        kprintf("uap->req == 31 uap->addr %d \n",uap->addr);
-        kprintf("uap->req == 31 uap->data %d \n",uap->data);
 
 
     unified_kfree(caller_name);
 
 
-    if (uap->req == 31)
+    if (uap->req == 31 || uap->req == 14)
     {
         /* code */
-        kprintf("uap->req == 31 uap %d",*(int *)uap);
-        kprintf("uap->req == 31 uap->req %d",*(int *)(uap+4));
-        kprintf("uap->req == 31 uap->+4 %d",*(int *)(uap+8));
-        kprintf("uap->req == 31 uap->+8 %d",*(int *)(uap+12));
-        kprintf("uap->req == 31 uap->+12 %d",*(int *)(uap+16));
-        kprintf("uap->req == 31 uap->+16 %d",uap->addr);
-        kprintf("uap->req == 31");
-        kprintf("uap->req == 31");
-        kprintf("uap->req == 31");
-        uap->req == 30;
-        return ptrace_orig(p,uap,retval);;
+
+
+  
+        kprintf("uap->req == 31 uap->req %d \n",uap->req);
+        
+        kprintf("uap->req == 31 uap->pid %d \n",uap->pid);
+        
+        kprintf("uap->req == 31 uap->addr %d \n",uap->addr);
+        kprintf("uap->req == 31 uap->data %d \n",uap->data);
+
+        
+        return 0;
   
 
     }
