@@ -12,17 +12,19 @@ endif
 
 XNUSPY_HEADER = ../include/xnuspy/xnuspy_ctl.h
 
-all : open1_hook user_client_monitor kernel_thread kaddr_of_port shmem
+all : open1_hook user_client_monitor kernel_thread kaddr_of_port shmem ptrace_hook
 
 .PHONY : upload
 
-upload : open1_hook user_client_monitor kernel_thread kaddr_of_port shmem
+upload : open1_hook user_client_monitor kernel_thread kaddr_of_port shmem ptrace_hook
 	rsync -sz -e 'ssh -p 2222' open1_hook root@localhost:/var/root
 	rsync -sz -e 'ssh -p 2222' user_client_monitor root@localhost:/var/root
 	rsync -sz -e 'ssh -p 2222' kernel_thread root@localhost:/var/root
 	rsync -sz -e 'ssh -p 2222' kaddr_of_port root@localhost:/var/root
 	rsync -sz -e 'ssh -p 2222' shmem root@localhost:/var/root
+	rsync -sz -e 'ssh -p 2222' ptrace_hook root@localhost:/var/root
 
+	
 open1_hook : open1_hook.c $(XNUSPY_HEADER)
 	$(CC) $(CFLAGS) open1_hook.c -o open1_hook
 	ldid -S../ent.xml ./open1_hook
@@ -42,3 +44,6 @@ kaddr_of_port : kaddr_of_port.c $(XNUSPY_HEADER)
 shmem : shmem.c $(XNUSPY_HEADER)
 	$(CC) $(CFLAGS) shmem.c -o shmem
 	ldid -S../ent.xml ./shmem
+ptrace_hook : ptrace_hook.c $(XNUSPY_HEADER)
+	$(CC) $(CFLAGS) ptrace_hook.c -o ptrace_hook
+	ldid -S../ent.xml ./ptrace_hook
