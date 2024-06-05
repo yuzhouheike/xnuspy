@@ -98,7 +98,7 @@ static int my_ptrace(struct proc *p, struct ptrace_args *uap, int32_t *retval){
     unified_kfree(caller_name);
 
 
-    if (uap->req == 31 || uap->req == 14)
+    if (uap->req == 31)
     {
         /* code */
 
